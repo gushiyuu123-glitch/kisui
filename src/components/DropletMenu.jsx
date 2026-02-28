@@ -197,19 +197,21 @@ export default function DropletMenuSP() {
         </span>
       </button>
 
-      {/* 左上ロゴ */}
-      <button
-        type="button"
-        onClick={() => scrollToSection("kisui-hero")}
-        className="
-          fixed top-4 left-5 z-[99999998]
-          text-[15px] tracking-[0.22em]
-          text-black/55
-        "
-      >
-        KISUI
-      </button>
-
+{/* 左上ロゴ（存在感 +20%） */}
+<button
+  type="button"
+  onClick={() => scrollToSection("kisui-hero")}
+  className="
+    fixed top-6 left-7 z-[99999998]
+    text-[17px] tracking-[0.26em]
+    font-normal
+    text-black/70
+    hover:text-black/85
+    transition-colors duration-300
+  "
+>
+  KISUI
+</button>
       {/* =============================================================
           背景光膜（KISUI水膜トーン）
       ============================================================= */}
