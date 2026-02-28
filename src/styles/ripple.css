@@ -1,0 +1,6 @@
+/* src/styles/ripple.css */
+.ripple-layer {
+  filter: url("#kisui-ripple");
+  transform: translateZ(0);
+  will-change: filter, transform;
+}

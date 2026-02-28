@@ -1,0 +1,15 @@
+/* SP — 基本フェード */
+.kisui-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  filter: blur(0.12px);
+  transition:
+    opacity 0.75s ease-out,
+    transform 0.85s ease-out;
+}
+
+.kisui-fade.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0px);
+}

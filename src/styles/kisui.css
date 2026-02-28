@@ -1,0 +1,52 @@
+/* ======================================================
+   KISUI — Ripple（中心から“滲む光膜”）
+   ※ Hero用：破綻ゼロ・高級版
+===================================================== */
+
+.kisui-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 420px;
+  height: 420px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+
+  /* 中心の光 */
+  background: radial-gradient(
+    circle,
+    rgba(255,255,255,0.22),
+    rgba(255,255,255,0.09) 40%,
+    rgba(255,255,255,0) 75%
+  );
+
+  opacity: 0;            /* 初期OFF */
+  filter: blur(12px);     /* ← 20px は大きすぎるので最適化 */
+  mix-blend-mode: screen; /* 光を自然に溶かす */
+
+  /* フェード発火時に軽く呼吸させる */
+  animation: kisuiRipplePulse 9s ease-in-out infinite alternate;
+  transition: opacity 1.4s ease-out;
+}
+
+/* ON状態（Observerで付与） */
+.kisui-ripple.is-visible {
+  opacity: 0.38; /* ← 高級系の最適値（光が滲む） */
+}
+
+/* 呼吸アニメーション（揺れに見えない最大許容） */
+@keyframes kisuiRipplePulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    filter: blur(12px);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.045);
+    filter: blur(14px);
+  }
+}
+/* SP/MIDDLEは Ripple を完全に殺す */
+.kisui-no-ripple .kisui-ripple {
+  display: none !important;
+}

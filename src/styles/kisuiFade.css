@@ -1,0 +1,87 @@
+/* =====================================================
+   KISUI — フェードイン（統一呼吸カーブ）
+   ※ class="kisui-fade" を付けるだけで機能
+===================================================== */
+
+/* 初期状態（透明・少し下・0.18pxの膜） */
+.kisui-fade {
+  opacity: 0;
+  transform: translateY(22px);
+  filter: blur(0.18px); /* 裕人ルール：0.0〜0.3px */
+  transition:
+    opacity 0.95s cubic-bezier(0.22, 0.0, 0.15, 1),
+    transform 1.05s cubic-bezier(0.22, 0.0, 0.15, 1),
+    filter 0.85s linear;
+  will-change: opacity, transform;  /* filter は動的変化なので外す */
+}
+
+/* スクロールINで発火 */
+.kisui-fade.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0px);
+}
+
+/* “初期チラつき防止”用プレクラス */
+.kisui-pre {
+  opacity: 0 !important;
+  transform: translateY(24px) !important;
+  filter: blur(0.22px) !important;
+}
+
+
+
+/* =====================================================
+   KISUI — 水膜レイヤー（光膜の呼吸）
+===================================================== */
+
+.kisui-water {
+  position: relative;
+  overflow: hidden;
+  contain: paint; /* GPU最適化（Safariも安定） */
+}
+
+/* 光膜レイヤー（before） */
+.kisui-water::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background: radial-gradient(
+    120% 80% at 50% 30%,
+    rgba(255,255,255,0.18),
+    rgba(255,255,255,0.05),
+    transparent 70%
+  );
+
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform: translateZ(0); /* GPUレイヤー生成 */
+
+  transition: opacity 1.15s ease-out;
+  animation: kisuiWaterBreath 8.2s ease-in-out infinite alternate;
+}
+
+/* 光膜 ON（フェード完了時に Observer が付与） */
+.kisui-water.kisui-water-active::before {
+  opacity: 1;
+}
+
+
+
+/* =====================================================
+   KISUI — 呼吸アニメーション（光だけが膨らむ）
+===================================================== */
+
+@keyframes kisuiWaterBreath {
+  0% {
+    transform: scale(1) translateY(0px);
+    filter: brightness(1);
+  }
+  100% {
+    transform: scale(1.045) translateY(1.6px);
+    /* ↑ “揺れではなく呼吸” と人間が認識する最大許容値 */
+    filter: brightness(1.022);
+  }
+}

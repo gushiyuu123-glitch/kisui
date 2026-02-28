@@ -1,0 +1,4 @@
+/* SP — RippleもOFF（Heroの中心光膜が透明レイヤーを作るため） */
+.kisui-ripple {
+  display: none !important;
+}

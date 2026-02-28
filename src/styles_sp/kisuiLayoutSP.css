@@ -1,0 +1,4 @@
+/* SPは overflow hidden を基本封印（レイヤー壊れ防止） */
+section {
+  overflow: visible !important;
+}

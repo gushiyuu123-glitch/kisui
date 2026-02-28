@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google" content="notranslate" />
+
+  <title>KISUI | 静けさの中にある美しさ</title>
+<!-- jQuery（先） -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Ripples -->
+<script src="https://unpkg.com/jquery.ripples/dist/jquery.ripples-min.js"></script>
+
+<!-- Reactアプリ（最後） -->
+<script type="module" src="/src/main.jsx"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <!-- Vite -->
+  <script type="module" src="/src/main.jsx"></script>
+
+  <!-- ======================
+       Ripple 初期化（React前でもOK）
+  ======================= -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const target = document.querySelector(".kisui-hero-bg");
+      if (!target) return;
+
+      try {
+        jQuery(target).ripples({
+          resolution: 256,
+          dropRadius: 18,
+          perturbance: 0.035,
+        });
+      } catch (e) {
+        console.warn("Ripples failed:", e);
+      }
+    });
+  </script>
+</body>
+</html>

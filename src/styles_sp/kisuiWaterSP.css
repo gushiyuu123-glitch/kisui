@@ -1,0 +1,4 @@
+/* SP — 水膜は完全OFF（重くてレイヤー事故を起こす） */
+.kisui-water::before {
+  display: none !important;
+}
