@@ -5,10 +5,7 @@
          基本設定
     ====================================== -->
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google" content="notranslate" />
 
     <!-- =====================================
@@ -16,7 +13,6 @@
     ====================================== -->
     <title>KISUI | 静けさの中にある美しさ</title>
 
-    <!-- ※ description は検索結果＆OGP 両方で使われる想定 -->
     <meta
       name="description"
       content="KISUI（綺水）は、肌と心に“静かな透明感”を届けるスキンケアウォーター。水のように軽く、敏感肌でも使いやすい、無香料・低刺激の化粧水です。"
@@ -30,46 +26,35 @@
 
     <!-- =====================================
          Favicon / App Icons
-         ※ public/ 以下にファイルを置く
+         ※ 全サイズ対応
     ====================================== -->
-    <!-- 32x32 / 16x16 は最低用意しておくと安心 -->
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/favicon-16x16.png"
-    />
-    <!-- SVG ロゴがあるなら -->
-    <!-- <link rel="icon" type="image/svg+xml" href="/favicon.svg" /> -->
+    <!-- 最重要：16 / 32 -->
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
 
-    <!-- iOS 用 タッチアイコン（任意、用意できたら） -->
-    <!-- <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" /> -->
+    <!-- 拡張サイズ（主要ブラウザ対応） -->
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64x64.png" />
+
+    <!-- PWA・高解像度用 -->
+    <link rel="icon" type="image/png" sizes="128x128" href="/favicon-128x128.png" />
+    <link rel="icon" type="image/png" sizes="256x256" href="/favicon-256x256.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png" />
+
+    <!-- iOS / iPadOS タッチアイコン（推奨サイズ）-->
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon-256x256.png" />
 
     <!-- =====================================
-         OGP（Open Graph Protocol）
+         OGP
     ====================================== -->
     <meta property="og:type" content="website" />
-    <meta
-      property="og:site_name"
-      content="KISUI | 静けさの中にある美しさ"
-    />
-    <meta
-      property="og:title"
-      content="KISUI | 静けさの中にある美しさ"
-    />
+    <meta property="og:site_name" content="KISUI | 静けさの中にある美しさ" />
+    <meta property="og:title" content="KISUI | 静けさの中にある美しさ" />
     <meta
       property="og:description"
       content="KISUI（綺水）は、肌と心に“静かな透明感”を届けるスキンケアウォーター。水のように軽く、敏感肌でも使いやすい、無香料・低刺激の化粧水です。"
     />
     <meta property="og:url" content="https://kisui.vercel.app/" />
-
-    <!-- 1200x630 か 1200x628 推奨。public/og/kisui-og.png を想定 -->
     <meta
       property="og:image"
       content="https://kisui.vercel.app/og/kisui-og.png"
@@ -80,10 +65,7 @@
          Twitter Card
     ====================================== -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="KISUI | 静けさの中にある美しさ"
-    />
+    <meta name="twitter:title" content="KISUI | 静けさの中にある美しさ" />
     <meta
       name="twitter:description"
       content="肌にやさしい“水のような”スキンケアウォーター、KISUI（綺水）。無香料・低刺激で、毎日のスキンケアに静かな透明感を。"
@@ -93,23 +75,8 @@
       content="https://kisui.vercel.app/og/kisui-og.png"
     />
 
-    <!-- （任意）ブランドを分けたいとき -->
-    <!-- <meta name="twitter:site" content="@your_account" /> -->
-
     <!-- =====================================
-         パフォーマンス系（任意）
-         画像を先読みしたくなったら使う
-    ====================================== -->
-    <!--
-    <link
-      rel="preload"
-      as="image"
-      href="/og/kisui-og.png"
-    />
-    -->
-
-    <!-- =====================================
-         jQuery & Ripples（React より先）
+         jQuery & Ripples
     ====================================== -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://unpkg.com/jquery.ripples/dist/jquery.ripples-min.js"></script>
@@ -118,10 +85,6 @@
   <body>
     <div id="root"></div>
 
-    <!-- ======================
-         Ripple 初期化
-         （.kisui-hero-bg が DOM に現れたあとでも動くように）
-    ======================= -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const initRipples = () => {
@@ -139,18 +102,11 @@
           }
         };
 
-        // 初回
         initRipples();
-
-        // React マウントが遅れた場合に備えて少し遅延チェックも入れておく
         setTimeout(initRipples, 800);
       });
     </script>
 
-    <!-- =====================================
-         React / Vite エントリーポイント
-         （重複しないように 1つだけ）
-    ====================================== -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
