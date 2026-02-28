@@ -66,34 +66,38 @@ export default function PhilosophySP() {
       =============================== */}
       <div className="relative z-[5] max-w-[92%] mx-auto px-4 text-center kisui-fade">
         {/* 見出し */}
-        <h2 className="text-[12px] tracking-kisui-sm text-black/55 mb-4">
-          綺水の願い — Philosophy
-        </h2>
+{/* 見出し */}
+<h2 className="text-[12px] tracking-kisui-sm text-black/55 mb-3">
+  綺水の願い — Philosophy
+</h2>
 
-        <div className="w-[46px] h-[1px] bg-white/35 mx-auto mb-10" />
+<div className="w-[42px] h-[1px] bg-black/15 mx-auto mb-8" />
 
-        <p className="text-[22px] leading-[1.85] tracking-kisui-sm text-black/85 font-light mb-10">
-          あなたの生活そのものを、<br />静かに澄ませていきたい。
-        </p>
+{/* キャッチコピー */}
+<p className="text-[20px] leading-[1.72] tracking-kisui-sm text-black/85 font-light mb-8">
+  あなたの生活そのものを、<br />
+  静かに澄ませていきたい。
+</p>
 
-        {/* 1段目 */}
-        <p className="text-[14px] leading-[1.95] tracking-kisui-xs text-black/70 font-light opacity-[0.95] mb-6">
-          綺水は、飾りません。<br /><br />必要なものだけを選び、<br />ひと滴が<br />
-          肌の呼吸に寄り添うように働きます。
-        </p>
+{/* 1段目 */}
+<p className="text-[13.6px] leading-[1.85] tracking-kisui-xs text-black/75 font-light mb-5">
+  綺水は、飾りません。<br />
+  必要なものだけを選び、ひと滴が<br />
+  肌の呼吸に寄り添うように働きます。
+</p>
 
-        {/* 2段目 */}
-        <p className="text-[14px] leading-[1.95] tracking-kisui-xs text-black/70 font-light opacity-[0.9] mb-6">
-          美しさは「変える」ではなく、<br />あなたの中にすでにある<br />
-          “澄んだ状態”を取り戻すこと。
-        </p>
+{/* 2段目 */}
+<p className="text-[13.6px] leading-[1.85] tracking-kisui-xs text-black/75 font-light mb-5">
+  美しさは「変える」ではなく、<br />
+  あなたの中にすでにある<br />
+  “澄んだ状態”を取り戻すこと。
+</p>
 
-        {/* 3段目 */}
-        <p className="text-[14px] leading-[1.95] tracking-kisui-xs text-black/70 font-light opacity-[0.85] mb-8">
-          毎日の輪郭がやわらぎ、<br />鏡を見るたびに気分が整う。<br /><br />
-          その積み重ねこそが、<br />綺水の目指す未来です。
-        </p>
-
+{/* 3段目 */}
+<p className="text-[13.6px] leading-[1.85] tracking-kisui-xs text-black/75 font-light mb-6">
+  毎日の輪郭がやわらぎ、鏡を見るたびに気分が整う。<br />
+  その積み重ねこそが、綺水の目指す未来です。
+</p>
         {/* Drop（薄膜 × 小さめ × 呼吸なし） */}
         <img
           ref={dropRef}

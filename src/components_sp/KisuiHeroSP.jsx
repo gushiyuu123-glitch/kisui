@@ -11,71 +11,59 @@ export default function KisuiHeroSP() {
   const textRef = useRef(null);
 
   useEffect(() => {
-    // ===============================
-    // 背景フェード（超滑らか）
-    // ===============================
-    const bg = heroRef.current;
-    if (bg) {
+    // 背景フェード
+    if (heroRef.current) {
       gsap.fromTo(
-        bg,
+        heroRef.current,
+        { opacity: 0, scale: 1.03, filter: "blur(2.4px)" },
         {
-          opacity: 0,
-          y: 20,
-          scale: 1.03,
-          filter: "blur(2.6px)",
-        },
-        {
-          opacity: 0.72,
-          y: 0,
+          opacity: 0.75,
           scale: 1,
-          filter: "blur(1.1px)",
+          filter: "blur(1px)",
           duration: 1.6,
           ease: "power2.out",
         }
       );
     }
 
-    // ===============================
-    // ボトル呼吸 + オブジェクト化
-    // ===============================
-    gsap.fromTo(
-      bottleRef.current,
-      {
-        opacity: 0,
-        y: 22,
-        filter: "blur(1.4px)",
-      },
-      {
-        opacity: 0.88,
-        y: 0,
-        filter: "blur(0.32px)", // ← 完全にくっきりさせずオブジェクト感を残す
-        duration: 1.8,
-        ease: "power3.out",
-      }
-    );
+    // ボトルのフェード
+    if (bottleRef.current) {
+      gsap.fromTo(
+        bottleRef.current,
+        { opacity: 0, y: 26, filter: "blur(1.4px)" },
+        {
+          opacity: 0.9,
+          y: 0,
+          filter: "blur(0.32px)",
+          duration: 1.8,
+          ease: "power3.out",
+          delay: 0.1,
+        }
+      );
 
-    gsap.to(bottleRef.current, {
-      scale: 1.012,
-      duration: 4.8,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
+      gsap.to(bottleRef.current, {
+        scale: 1.012,
+        duration: 4.6,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+    }
 
-    // ===============================
-    // テキストのフェード
-    // ===============================
-    gsap.fromTo(
-      textRef.current,
-      { opacity: 0, y: 18 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1.6,
-        ease: "power2.out",
-        delay: 0.2,
-      }
-    );
+    // テキストフェード
+    if (textRef.current) {
+      gsap.fromTo(
+        textRef.current,
+        { opacity: 0, y: 18 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.4,
+          ease: "power2.out",
+          delay: 0.3,
+        }
+      );
+    }
   }, []);
 
   return (
@@ -84,105 +72,77 @@ export default function KisuiHeroSP() {
       className="
         relative
         w-full
-        h-[92vh]
+        min-h-[110vh]
+        flex flex-col
+        items-center
+        justify-start
+        pt-[70px]
+        pb-[70px]
         overflow-hidden
-        flex items-center justify-center
-        kisui-no-ripple
       "
     >
-      {/* ===============================
-          背景モデル（位置補正済み）
-      =============================== */}
-      <div className="absolute inset-0 z-[1] overflow-hidden">
+      {/* 背景 */}
+      <div className="absolute inset-0 z-[1]">
         <img
           ref={heroRef}
           src={heroImg}
           alt=""
           className="
             w-full h-full
-            object-cover object-center
-            opacity-[0.72]
-            blur-[1.1px]
+            object-cover
+            object-center
+            opacity-[0.75]
+            blur-[1px]
             scale-[1.02]
-            mix-blend-overlay
           "
         />
 
-        {/* 水膜1 */}
-        <div
-          className="
-            absolute inset-0
-            bg-white/7
-            backdrop-blur-[0.48px]
-          "
-        />
+        {/* 白膜 */}
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-[0.4px]" />
 
         {/* 光膜 */}
         <div
           className="
             absolute inset-0
             bg-gradient-to-b
-            from-white/20 via-white/10 to-transparent
-            opacity-[0.36]
-            mix-blend-screen
+            from-white/18 via-white/10 to-transparent
+            opacity-[0.32]
           "
         />
       </div>
 
-      {/* ===============================
-          背面光（位置・強度修正済み）
-      =============================== */}
+      {/* 光球 */}
       <div
         className="
-          absolute z-[3]
-          left-1/2 top-[52%]
-          w-[260px] h-[320px]
+          absolute z-[2]
+          left-1/2 top-[36%]
           -translate-x-1/2 -translate-y-1/2
-          bg-white/22
+          w-[260px] h-[260px]
+          bg-white/24
           blur-[45px]
-          rounded-[50%]
+          rounded-full
         "
       />
 
-      {/* ===============================
-          ボトル（位置大幅補正）
-      =============================== */}
+      {/* ボトル（中央固定） */}
       <img
         ref={bottleRef}
         src={bottleImg}
-        alt="Kisui Bottle"
+        alt=""
         className="
-          absolute z-[10]
-          left-1/2 top-[38%]
+          relative z-[3]
           w-[54vw] max-w-[260px]
-          -translate-x-1/2
-          rotate-[-2.5deg]
-          opacity-[0.88]
-          brightness-[1.05]
+          -mt-[20px]
+          opacity-[0.9]
+          rotate-[-2deg]
           select-none pointer-events-none
         "
       />
 
-      {/* ===============================
-          最前面の薄水膜
-      =============================== */}
-      <div
-        className="
-          absolute inset-0 z-[12]
-          bg-white/6 backdrop-blur-[0.2px]
-        "
-      />
-
-      {/* ===============================
-          TEXT（余白 & 位置補正）
-      =============================== */}
+      {/* テキスト（安全な縦積み） */}
       <div
         ref={textRef}
-        className="
-          absolute bottom-[14vh]
-          z-[20]
-          w-full text-center px-6
-        "
+        className="relative z-[4] mt-[46px] text-center px-6"
       >
         <h1
           className="
@@ -197,7 +157,7 @@ export default function KisuiHeroSP() {
 
         <p
           className="
-            mt-2
+            mt-1
             text-[11px]
             tracking-[0.36em]
             text-[rgba(17,17,17,0.42)]
@@ -208,12 +168,11 @@ export default function KisuiHeroSP() {
 
         <p
           className="
-            mt-6
+            mt-5
             text-[16.8px]
             leading-[1.92]
             tracking-[0.085em]
             text-[rgba(17,17,17,0.82)]
-            px-4
           "
         >
           美しさは、静かに育つ。

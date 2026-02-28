@@ -181,14 +181,14 @@ export default function Reviews() {
           {current.map((r, i) => (
             <div
               key={r.name + i}
-              className="
-                relative p-8 rounded-kisui-xl
-                bg-white/30 backdrop-blur-[1.6px]
-                ring-1 ring-white/40
-                shadow-[0_12px_40px_rgba(0,0,0,0.07)]
-                opacity-0 translate-y-[18px]
-                animate-reviewFadeIn
-              "
+   className="
+  relative p-8 rounded-kisui-xl
+  bg-white/40 backdrop-blur-[2px]
+  ring-1 ring-white/40
+  shadow-[0_8px_24px_rgba(0,0,0,0.05)]
+  opacity-0 translate-y-[18px]
+  animate-reviewFadeIn
+"
               style={{ animationDelay: `${0.18 * i}s` }}
             >
               {/* 名前 */}
