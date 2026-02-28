@@ -124,60 +124,64 @@ export default function KisuiHeroSP() {
         "
       />
 
-      {/* ボトル（中央固定） */}
-      <img
-        ref={bottleRef}
-        src={bottleImg}
-        alt=""
-        className="
-          relative z-[3]
-          w-[54vw] max-w-[260px]
-          -mt-[20px]
-          opacity-[0.9]
-          rotate-[-2deg]
-          select-none pointer-events-none
-        "
-      />
+{/* ボトル（中央固定・位置補正済み） */}
+<img
+  ref={bottleRef}
+  src={bottleImg}
+  alt=""
+  className="
+    relative z-[3]
+    w-[54vw] max-w-[260px]
+    -mt-[6px]          /* ← 20px 上げ → 6px 上げ：自然な中央寄せに */
+    opacity-[0.9]
+    rotate-[-2deg]
+    select-none pointer-events-none
+  "
+/>
 
-      {/* テキスト（安全な縦積み） */}
-      <div
-        ref={textRef}
-        className="relative z-[4] mt-[46px] text-center px-6"
-      >
-        <h1
-          className="
-            text-[44px]
-            tracking-[0.22em]
-            font-light
-            text-[rgba(17,17,17,0.92)]
-          "
-        >
-          綺水
-        </h1>
+{/* テキスト（安全な縦積み・少し下げた版） */}
+<div
+  ref={textRef}
+  className="
+    relative z-[4]
+    mt-[70px]          /* ← 46px → 70px（安全に全体を少し下げる） */
+    text-center px-6
+  "
+>
+  <h1
+    className="
+      text-[44px]
+      tracking-[0.22em]
+      font-light
+      text-[rgba(17,17,17,0.92)]
+    "
+  >
+    綺水
+  </h1>
 
-        <p
-          className="
-            mt-1
-            text-[11px]
-            tracking-[0.36em]
-            text-[rgba(17,17,17,0.42)]
-          "
-        >
-          K I S U I
-        </p>
+  <p
+    className="
+      mt-1
+      text-[11px]
+      tracking-[0.36em]
+      text-[rgba(17,17,17,0.42)]
+    "
+  >
+    K I S U I
+  </p>
 
-        <p
-          className="
-            mt-5
-            text-[16.8px]
-            leading-[1.92]
-            tracking-[0.085em]
-            text-[rgba(17,17,17,0.82)]
-          "
-        >
-          美しさは、静かに育つ。
-        </p>
-      </div>
+  <p
+    className="
+      mt-5
+      text-[16.8px]
+      leading-[1.92]
+      tracking-[0.085em]
+      text-[rgba(17,17,17,0.82)]
+    "
+  >
+    美しさは、静かに育つ。
+  </p>
+</div>
     </section>
   );
 }
