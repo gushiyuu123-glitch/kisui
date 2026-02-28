@@ -1,300 +1,277 @@
 // ===============================================================
-//  🌊 KISUI DROPLET MENU — HEADERLESS + TEXT LOGO EDITION (Refined + Scroll + Guide)
+// 🌊 KISUI DROPLET MENU — SP ULTIMATE EDITION（右上固定・水膜強化）
 // ===============================================================
 
 import { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
 
-export default function DropletMenu() {
+export default function DropletMenuSP() {
   const [open, setOpen] = useState(false);
-  const menuRef = useRef(null);
-  const dropletRef = useRef(null);
-  const bgRef = useRef(null);
 
-  // -------------------------------
-  // セクションスクロールヘルパー
-  // -------------------------------
+  const menuRef = useRef(null);
+  const bgRef = useRef(null);
+  const dropletRef = useRef(null);
+  const rippleRef = useRef(null);
+  const highlightRef = useRef(null);
+
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
     if (!el) return;
-
-    el.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  /* ----------------------------------------
-      メニュー開閉アニメーション
-  ---------------------------------------- */
+  // ===============================================================
+  // ① 水滴の“呼吸” ＆ 光ハイライトの流れ
+  // ===============================================================
   useEffect(() => {
-    const menuEl = menuRef.current;
-    const bgEl = bgRef.current;
-    const dropletEl = dropletRef.current;
+    const drop = dropletRef.current;
+    const hl = highlightRef.current;
+    if (!drop || !hl) return;
 
-    if (!menuEl || !bgEl || !dropletEl) return;
+    const ctx = gsap.context(() => {
+      gsap.to(drop, {
+        scaleX: 1.014,
+        scaleY: 1.022,
+        duration: 7.6,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+      });
+
+      gsap.to(hl, {
+        yPercent: -16,
+        duration: 6.2,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        opacity: 0.85,
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
+  // ===============================================================
+  // ② メニュー開閉（blurは0.3px以下）
+  // ===============================================================
+  useEffect(() => {
+    const menu = menuRef.current;
+    const bg = bgRef.current;
+    if (!menu || !bg) return;
 
     if (open) {
-      // メニュー本体
       gsap.fromTo(
-        menuEl,
-        { scale: 0.88, opacity: 0, filter: "blur(16px)", y: 12 },
+        menu,
+        { opacity: 0, y: 14, scale: 0.95, filter: "blur(0.28px)" },
         {
-          scale: 1,
           opacity: 1,
-          filter: "blur(0px)",
           y: 0,
-          duration: 0.75,
+          scale: 1,
+          filter: "blur(0px)",
+          duration: 0.48,
           ease: "power3.out",
         }
       );
 
-      // 背景光膜
-      gsap.to(bgEl, {
+      gsap.to(bg, {
         opacity: 1,
-        duration: 0.6,
+        duration: 0.38,
         ease: "power2.out",
-      });
-
-      // しずく呼吸モーション
-      gsap.to(dropletEl, {
-        scale: 1.04,
-        rotate: 180,
-        opacity: 0.95,
-        duration: 1.4,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        overwrite: "auto",
+        pointerEvents: "auto",
       });
     } else {
-      // メニュー本体
-      gsap.to(menuEl, {
-        scale: 0.92,
+      gsap.to(menu, {
         opacity: 0,
-        filter: "blur(10px)",
         y: 10,
-        duration: 0.45,
-        ease: "power3.out",
-      });
-
-      // 背景光膜
-      gsap.to(bgEl, {
-        opacity: 0,
-        duration: 0.45,
+        scale: 0.95,
+        duration: 0.42,
         ease: "power2.out",
       });
 
-      // しずくを“静”に戻す
-      gsap.to(dropletEl, {
-        scale: 1,
-        rotate: 0,
-        opacity: 1,
-        duration: 0.5,
-        ease: "power3.out",
-        overwrite: "auto",
+      gsap.to(bg, {
+        opacity: 0,
+        duration: 0.35,
+        ease: "power2.out",
+        pointerEvents: "none",
       });
     }
   }, [open]);
 
-  /* ----------------------------------------
-      ESCキーで閉じる
-  ---------------------------------------- */
-  useEffect(() => {
-    const handleKey = (e) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-      }
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, []);
+  // ===============================================================
+  // ③ タップ時の涙形リップル
+  // ===============================================================
+  const triggerRipple = () => {
+    const ripple = rippleRef.current;
+    if (!ripple) return;
 
-  // メニュー項目と飛び先IDのマッピング
-  const menuItems = [
-    { label: "ブランドについて", target: "kisui-philosophy", kind: "normal" },
-    { label: "成分について", target: "kisui-ingredients", kind: "normal" },
-    { label: "ご購入はこちら", target: "kisui-products", kind: "primary" },
-    { label: "お客様の声", target: "kisui-reviews", kind: "normal" },
-    { label: "よくあるご質問", target: "kisui-faq", kind: "normal" },
+    gsap.killTweensOf(ripple);
+    gsap.set(ripple, {
+      opacity: 0.3,
+      scaleX: 0.22,
+      scaleY: 0.36,
+    });
+
+    gsap.to(ripple, {
+      opacity: 0,
+      scaleX: 1.15,
+      scaleY: 1.42,
+      duration: 0.75,
+      ease: "power2.out",
+    });
+  };
+
+  const handleToggle = () => {
+    triggerRipple();
+    setOpen((v) => !v);
+  };
+
+  const items = [
+    { label: "ブランドについて", id: "kisui-philosophy" },
+    { label: "成分", id: "kisui-ingredients" },
+    { label: "商品", id: "kisui-products" },
+    { label: "レビュー", id: "kisui-reviews" },
+    { label: "FAQ", id: "kisui-faq" },
   ];
 
   return (
     <>
-      {/* ----------------------------------------------------------
-          🌫 左上ロゴ（フォント）— クリックでHEROへ
-      ----------------------------------------------------------- */}
-      <button
-        type="button"
-        onClick={() => scrollToSection("kisui-hero")}
-        className="
-          fixed top-5 left-6 z-[900]
-          text-[18px] md:text-[20px]
-          tracking-[0.22em]
-          font-light
-          text-black/55
-          select-none
-          cursor-pointer
-          bg-transparent
-        "
-      >
-        KISUI
-      </button>
-
-      {/* ----------------------------------------------------------
-          🌊 しずくボタン（内部 MINI MENU）
-      ----------------------------------------------------------- */}
+      {/* =============================================================
+          右上 水滴アイコン（強化版）
+      ============================================================= */}
       <button
         ref={dropletRef}
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={handleToggle}
         className="
-          fixed z-[1001]
-          right-6 bottom-6 md:top-8 md:bottom-auto
-
-          w-[56px] h-[56px]
+          fixed top-4 right-4 z-[999999999]
+          w-[60px] h-[60px]
           flex flex-col items-center justify-center
-          gap-[2px]
-
           rounded-full
-          bg-white/55
-          backdrop-blur-[10px]
-          ring-1 ring-white/40
-          shadow-[0_10px_25px_rgba(0,0,0,0.10)]
-
-          transition-all duration-500
-          hover:scale-[1.08]
+          bg-white/65
+          backdrop-blur-[11px]
+          ring-1 ring-white/50
+          shadow-[0_8px_24px_rgba(0,0,0,0.15)]
+          active:scale-[0.97]
+          transition-transform duration-150
         "
-        style={{
-          background:
-            'radial-gradient(circle at 50% 35%, rgba(255,255,255,0.96), rgba(212,232,248,0.6))',
-        }}
-        aria-label="メニューを開く"
-        aria-expanded={open}
       >
-        <div
+        {/* リップル */}
+        <span
+          ref={rippleRef}
           className="
-            w-[23px] h-[23px]
-            rounded-full
-            bg-gradient-to-b from-white to-[#d7e8f5]
-            shadow-[0_0_14px_rgba(255,255,255,0.8)]
+            pointer-events-none absolute inset-0 rounded-full
+            bg-gradient-to-b from-white/45 to-[#d9ebf8]/35
+            border border-white/60
           "
+          style={{ opacity: 0 }}
         />
+
+        {/* 内側の水滴 */}
+        <span
+          className="
+            relative w-[22px] h-[22px]
+            rounded-full
+            bg-gradient-to-b from-white to-[#e3f0f9]
+            shadow-[0_0_10px_rgba(255,255,255,0.85)]
+            ring-1 ring-black/10
+            overflow-hidden
+          "
+        >
+          {/* 光膜 */}
+          <span
+            ref={highlightRef}
+            className="
+              absolute -top-1 left-0 right-0
+              h-[14px]
+              bg-gradient-to-b from-white/85 via-white/0 to-transparent
+            "
+          />
+        </span>
 
         <span
           className="
-            text-[9px]
-            tracking-[0.16em]
-            text-black/55
-            select-none pointer-events-none
-            translate-y-[1px]
+            text-[8px] tracking-[0.18em]
+            text-black/55 mt-[4px]
           "
         >
           MENU
         </span>
       </button>
 
-      {/* ----------------------------------------------------------
-          背景光膜（淡い水膜 × 深度）
-      ----------------------------------------------------------- */}
+      {/* 左上ロゴ */}
+      <button
+        type="button"
+        onClick={() => scrollToSection("kisui-hero")}
+        className="
+          fixed top-4 left-5 z-[99999998]
+          text-[15px] tracking-[0.22em]
+          text-black/55
+        "
+      >
+        KISUI
+      </button>
+
+      {/* =============================================================
+          背景光膜（KISUI水膜トーン）
+      ============================================================= */}
       <div
         ref={bgRef}
-        onClick={() => setOpen(false)}
-        className={`
-          fixed inset-0 z-[1000]
-          transition-opacity duration-400
-          ${open ? "pointer-events-auto" : "pointer-events-none"}
-        `}
+        className="fixed inset-0 z-[9999990] transition-opacity duration-300"
         style={{
           opacity: 0,
-          backdropFilter: "blur(18px)",
+          backdropFilter: "blur(22px)",
           backgroundImage:
-            "linear-gradient(135deg, rgba(255,255,255,0.55), rgba(218,234,255,0.45) 45%, rgba(200,225,250,0.35))",
+            "linear-gradient(135deg, rgba(255,255,255,0.55), rgba(230,244,255,0.40) 45%, rgba(210,233,248,0.32))",
+          pointerEvents: "none",
         }}
+        onClick={() => setOpen(false)}
       />
 
-      {/* ----------------------------------------------------------
-          メニュー本体（しずく展開）
-      ----------------------------------------------------------- */}
+      {/* =============================================================
+          メニュー本体（Dior透明カード級の質感）
+      ============================================================= */}
       <nav
         ref={menuRef}
         className="
-          fixed z-[1001]
-          right-6 bottom-[92px]
-          md:right-10 md:top-[110px]
-
-          w-[240px] md:w-[260px]
-
-          p-6
+          fixed right-4 top-[86px]
+          z-[9999999]
+          w-[232px]
+          p-5
           rounded-3xl
-          bg-white/70
-          backdrop-blur-[18px]
+          bg-white/72
+          backdrop-blur-[14px]
           ring-1 ring-white/55
-          shadow-[0_20px_45px_rgba(0,0,0,0.12)]
-
-          flex flex-col gap-4
-          text-[14px]
+          shadow-[0_20px_42px_rgba(0,0,0,0.12)]
+          flex flex-col gap-[10px]
+          text-[13px]
           tracking-[0.18em]
-          text-text-primary/75
         "
         style={{ opacity: 0 }}
       >
-        {/* ===== ミニヘッダー（KISUI GUIDE） ===== */}
-        <div className="mb-3">
-          <p
-            className="
-              text-[11px]
-              tracking-[0.26em]
-              text-text-primary/55
-              uppercase
-            "
-          >
-            KISUI&nbsp;GUIDE
-          </p>
-          <div
-            className="
-              mt-2 w-[46px] h-[1px]
-              bg-gradient-to-r
-              from-[#c7dff4] via-[#dfefff] to-transparent
-            "
-          />
-        </div>
-
-        {/* ===== メニュー項目 ===== */}
-        {menuItems.map(({ label, target, kind }) => (
+        {items.map((item) => (
           <button
-            key={label}
+            key={item.id}
             onClick={() => {
               setOpen(false);
-              scrollToSection(target);
+              scrollToSection(item.id);
             }}
-            className={`
-              group
-              relative text-left py-[6px]
-              transition-colors
-              ${
-                kind === "primary"
-                  ? "text-text-primary/90"
-                  : "text-text-primary/75"
-              }
-            `}
+            className="
+              text-left py-[7px] relative group text-black/70
+            "
           >
-            {label}
-
+            {/* ホバーライン */}
             <span
-              className={`
-                absolute right-0 top-1/2 -translate-y-1/2
-                w-[12px] h-[12px]
-                rounded-full
-                bg-gradient-to-b from-white to-[#d1e4f2]
-                shadow-[0_0_10px_rgba(255,255,255,0.9)]
+              className="
+                pointer-events-none
+                absolute left-0 bottom-0
+                w-0 h-[1px]
+                bg-gradient-to-r from-transparent via-[#9ec5e8]/85 to-transparent
                 transition-all duration-300
-                ${
-                  kind === "primary"
-                    ? "opacity-70 group-hover:opacity-100"
-                    : "opacity-0 group-hover:opacity-100"
-                }
-              `}
+                group-hover:w-full
+              "
             />
+            <span className="relative z-[1] transition-colors group-hover:text-black/85">
+              {item.label}
+            </span>
           </button>
         ))}
       </nav>

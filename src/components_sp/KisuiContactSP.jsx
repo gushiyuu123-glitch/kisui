@@ -1,6 +1,6 @@
 // ==============================================
-// KISUI CONTACT — SP Ultimate+
-// 背景光 / 縦ライン強化 ＋ 浮遊ラベルフォーム
+// KISUI CONTACT — SP Ultimate+（修正版）
+// 背景光 / 縦ライン強化 ＋ 浮遊ラベルフォーム ＋ nullガード
 // ==============================================
 
 import { useEffect, useRef } from "react";
@@ -17,40 +17,50 @@ export default function KisuiContactSP() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      const wrap = wrapRef.current;
+      const line = lineRef.current;
+      const panel = panelRef.current;
+
       // 水膜ゆらぎ（SPは弱め・長め）
-      gsap.to(wrapRef.current, {
-        backgroundPositionY: "26px",
-        duration: 20,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
+      if (wrap) {
+        gsap.to(wrap, {
+          backgroundPositionY: "26px",
+          duration: 20,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+      }
 
       // Dior縦ライン（少しだけ呼吸）
-      gsap.to(lineRef.current, {
-        scaleY: 1.03,
-        duration: 9.5,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
+      if (line) {
+        gsap.to(line, {
+          scaleY: 1.03,
+          duration: 9.5,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+      }
 
       // パネルフェード（blurは極薄）
-      gsap.fromTo(
-        panelRef.current,
-        { opacity: 0, y: 20, filter: "blur(0.3px)" },
-        {
-          opacity: 1,
-          y: 0,
-          filter: "blur(0px)",
-          duration: 1.25,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: wrapRef.current,
-            start: "top 84%",
-          },
-        }
-      );
+      if (panel && wrap) {
+        gsap.fromTo(
+          panel,
+          { opacity: 0, y: 20, filter: "blur(0.3px)" },
+          {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            duration: 1.25,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: wrap,
+              start: "top 84%",
+            },
+          }
+        );
+      }
     });
 
     return () => ctx.revert();
@@ -58,6 +68,7 @@ export default function KisuiContactSP() {
 
   return (
     <section
+      id="kisui-contact"
       ref={wrapRef}
       className="
         relative w-full
@@ -101,6 +112,20 @@ export default function KisuiContactSP() {
         "
       />
 
+      {/* Diorライン（中央） */}
+      <div
+        ref={lineRef}
+        className="
+          absolute top-0 left-1/2 -translate-x-1/2
+          w-[1px] h-full
+          bg-white/42
+          blur-[0.6px]
+          opacity-[0.65]
+          pointer-events-none
+          z-[2]
+        "
+      />
+
       {/* 中央光膜（KISUIっぽい白×水色の塊） */}
       <div
         className="
@@ -109,37 +134,11 @@ export default function KisuiContactSP() {
           -translate-x-1/2 -translate-y-1/2
           w-[340px] h-[340px]
           rounded-full
-          bg-[radial-gradient(circle_at_50%_40%,rgba(255,255,255,0.85),rgba(228,241,248,0.75),rgba(228,241,248,0))]
-          opacity-[0.85]
+          bg-[radial-gradient(circle_at_50%_40%,rgba(255,255,255,0.88),rgba(228,241,248,0.78),rgba(228,241,248,0))]
+          opacity-[0.9]
           blur-[86px]
           pointer-events-none
           z-[0]
-        "
-      />
-
-      {/* Dior縦ライン（白→水色グラデ） */}
-      <div
-        ref={lineRef}
-        className="
-          absolute top-0 left-1/2 -translate-x-1/2
-          w-[1px] h-full
-          bg-gradient-to-b
-          from-white/85 via-white/40 to-kisui-light/70
-          blur-[0.25px] opacity-[0.70]
-          pointer-events-none
-          z-[2]
-        "
-      />
-
-      {/* 縦ライン用のほんのり光膜 */}
-      <div
-        className="
-          absolute top-0 left-1/2 -translate-x-1/2
-          w-[56px] h-full
-          bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.32),rgba(255,255,255,0))]
-          opacity-[0.40]
-          pointer-events-none
-          z-[1]
         "
       />
 
@@ -245,13 +244,11 @@ function InputBlockSP({ id, label, hint }) {
           text-[11.5px] tracking-[0.14em]
           text-text-primary/60
           transition-all duration-300
-          /* デフォ：入力済 or フォーカス時（上） */
           top-[6px]
           peer-focus:top-[6px]
           peer-focus:text-[11px]
           peer-focus:text-text-primary/85
           peer-focus:tracking-[0.16em]
-          /* 未入力（placeholder表示中）のとき：少し下に */
           peer-placeholder-shown:top-[13px]
           peer-placeholder-shown:text-[12px]
           peer-placeholder-shown:text-text-primary/55
@@ -260,7 +257,6 @@ function InputBlockSP({ id, label, hint }) {
         {label}
       </label>
 
-      {/* 下にうっすら補足テキスト */}
       {hint && (
         <p className="mt-1 text-[11px] tracking-[0.04em] text-text-muted/80">
           {hint}

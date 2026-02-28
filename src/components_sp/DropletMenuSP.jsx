@@ -136,10 +136,10 @@ export default function DropletMenuSP() {
 
   // セクションIDのマッピング（必要に応じて差し替えOK）
   const items = [
-    { label: "ブランドについて", id: "kisui-about" },
+    { label: "ブランドについて", id: "kisui-philosophy" },
     { label: "成分", id: "kisui-ingredients" },
     { label: "商品", id: "kisui-products" },
-    { label: "レビュー", id: "kisui-review" },
+    { label: "レビュー", id: "kisui-reviews" },
     { label: "FAQ", id: "kisui-faq" },
   ];
 

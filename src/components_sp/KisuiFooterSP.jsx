@@ -78,22 +78,23 @@ export default function KisuiFooterSP() {
         "
       />
 
-      {/* === 波レイヤー（PC と同じ位置／順番） === */}
-      <img
-        src={waveImg}
-        alt="water wave"
-        className="
-          absolute bottom-0 left-1/2
-          -translate-x-1/2
-          w-[1980px]
-          opacity-[0.42]
-          blur-[0.8px]
-          drop-shadow-[0_0_18px_rgba(255,255,255,0.20)]
-          pointer-events-none
-          z-[2]                /* ← PC と同じ：膜より下、テキストより上 */
-        "
-      />
-
+{/* === 波レイヤー（全面にフィットさせる SP最適化） === */}
+<img
+  src={waveImg}
+  alt="water wave"
+  className="
+    absolute bottom-0 left-0
+    w-full
+    h-[420px]                 /* ← 波の縦範囲を広げる（重要） */
+    object-cover              /* ← 全体が入るようにフィット */
+    object-bottom             /* ← 下側を基準に自然に配置 */
+    opacity-[0.42]
+    blur-[0.8px]
+    drop-shadow-[0_0_18px_rgba(255,255,255,0.20)]
+    pointer-events-none
+    z-[2]
+  "
+/>
       {/* === 上膜グラデ（波を薄く溶かし込む） === */}
       <div
         className="
