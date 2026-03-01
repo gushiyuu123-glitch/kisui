@@ -1,5 +1,5 @@
 // ==============================================
-// KISUI FAQ — SP MINIMAL+（軽い水膜 × 膜フェード）
+// KISUI FAQ — SP MINIMAL+（完全修正版）
 // ==============================================
 
 import { useEffect, useRef, useState } from "react";
@@ -18,6 +18,9 @@ export default function KisuiFAQ_SP() {
   const [openIndex, setOpenIndex] = useState(-1);
   const [showMore, setShowMore] = useState(false);
 
+  /* ========================================
+     GSAP アニメーション（ScrollTrigger）
+  ======================================== */
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
@@ -59,7 +62,17 @@ export default function KisuiFAQ_SP() {
     return () => ctx.revert();
   }, []);
 
-  const handleToggle = (i) => setOpenIndex((p) => (p === i ? -1 : i));
+  /* ========================================
+     アコーディオン切り替え
+  ======================================== */
+  const handleToggle = (i) => {
+    setOpenIndex((v) => (v === i ? -1 : i));
+
+    // ★ ScrollTrigger refresh で “jump” しないためのガード
+    setTimeout(() => {
+      ScrollTrigger.refresh(false);
+    }, 50);
+  };
 
   return (
     <section
@@ -77,45 +90,16 @@ export default function KisuiFAQ_SP() {
         backgroundBlendMode: "lighten",
       }}
     >
-      {/* ======================
-          上フェード（薄）
-      ======================= */}
-      <div
-        className="
-          absolute top-0 left-0 w-full h-[130px]
-          bg-gradient-to-t
-          from-transparent via-white/35 to-white/75
-          pointer-events-none z-[2]
-        "
-      />
+      {/* 上フェード */}
+      <div className="absolute top-0 left-0 w-full h-[130px] bg-gradient-to-t from-transparent via-white/35 to-white/75 pointer-events-none z-[2]" />
 
-      {/* ======================
-          下フェード（薄）
-      ======================= */}
-      <div
-        className="
-          absolute bottom-0 left-0 w-full h-[150px]
-          bg-gradient-to-b
-          from-transparent via-white/30 to-white/70
-          pointer-events-none z-[2]
-        "
-      />
+      {/* 下フェード */}
+      <div className="absolute bottom-0 left-0 w-full h-[150px] bg-gradient-to-b from-transparent via-white/30 to-white/70 pointer-events-none z-[2]" />
 
-      {/* ======================
-          淡い白膜
-      ======================= */}
-      <div
-        className="
-          absolute inset-0
-          bg-gradient-to-b
-          from-white/70 via-white/38 to-white/10
-          pointer-events-none
-        "
-      />
+      {/* 白膜 */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/38 to-white/10 pointer-events-none" />
 
-      {/* ======================
-          縦ライン（薄）
-      ======================= */}
+      {/* 縦ライン */}
       <div
         ref={lineRef}
         className="
@@ -125,32 +109,16 @@ export default function KisuiFAQ_SP() {
         "
       />
 
-      {/* ======================
-          タイトル
-      ======================= */}
+      {/* タイトル */}
       <div className="relative z-10 mb-[80px] text-center">
-        <h2
-          className="
-            faq-sp-title
-            text-[14px]
-            tracking-[0.20em]
-            text-text-primary/70
-          "
-        >
+        <h2 className="faq-sp-title text-[14px] tracking-[0.20em] text-text-primary/70">
           よくあるご質問 — FAQ —
         </h2>
       </div>
 
-      {/* ======================
-          FAQ 全体
-      ======================= */}
-      <div
-        className="
-          relative z-10
-          max-w-[500px] mx-auto
-          flex flex-col gap-6
-        "
-      >
+      {/* FAQ本体 */}
+      <div className="relative z-10 max-w-[500px] mx-auto flex flex-col gap-6 pointer-events-auto">
+
         {faqList.map((item, i) => {
           const isOpen = openIndex === i;
           return (
@@ -211,9 +179,9 @@ export default function KisuiFAQ_SP() {
   );
 }
 
-/* =====================================================
-   FAQカード（SP）
-===================================================== */
+/* ===========================================
+   FAQ カード（競合ゼロ版）
+=========================================== */
 function FAQCard_SP({ item, isOpen, onClick }) {
   return (
     <div
@@ -242,11 +210,7 @@ function FAQCard_SP({ item, isOpen, onClick }) {
       >
         <img
           src={dropletIcon}
-          className="
-            w-[22px] h-[22px]
-            opacity-[0.78]
-            drop-shadow-[0_0_6px_rgba(180,215,255,0.50)]
-          "
+          className="w-[22px] h-[22px] opacity-[0.78] drop-shadow-[0_0_6px_rgba(180,215,255,0.50)]"
           alt=""
         />
 
@@ -255,7 +219,6 @@ function FAQCard_SP({ item, isOpen, onClick }) {
             {item.q}
           </p>
 
-          {/* Apple式 + / - */}
           <div
             className="
               ml-auto flex items-center justify-center
@@ -276,7 +239,6 @@ function FAQCard_SP({ item, isOpen, onClick }) {
         </div>
       </button>
 
-      {/* 回答 */}
       <div
         className={`
           relative z-10
@@ -294,10 +256,9 @@ function FAQCard_SP({ item, isOpen, onClick }) {
   );
 }
 
-/* =====================================================
-   FAQデータ（SP は共通）
-===================================================== */
-
+/* ===========================================
+   FAQ データ
+=========================================== */
 const faqList = [
   {
     q: "Q｜どんな肌質でも使えますか？",

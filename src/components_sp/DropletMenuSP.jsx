@@ -1,5 +1,5 @@
 // ===============================================================
-//  🌊 KISUI DROPLET MENU — SP EDITION（右上固定・KISUI完全版）
+//  🌊 KISUI DROPLET MENU — SP EDITION（Hero戻りバグ完全修正版）
 // ===============================================================
 
 import { useState, useRef, useEffect } from "react";
@@ -14,14 +14,21 @@ export default function DropletMenuSP() {
   const rippleRef = useRef(null);
   const highlightRef = useRef(null);
 
+  // ---------------------------------------
+  //  スクロール（バグ防止ガード付き）
+  // ---------------------------------------
   const scrollToSection = (id) => {
+    if (!id) return;
     const el = document.getElementById(id);
     if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   };
 
   // ---------------------------------------
-  // ① ドロップレットの「呼吸」モーション
+  // ① ドロップレットの呼吸モーション
   // ---------------------------------------
   useEffect(() => {
     const dropletEl = dropletRef.current;
@@ -29,17 +36,15 @@ export default function DropletMenuSP() {
     if (!dropletEl || !highlightEl) return;
 
     const ctx = gsap.context(() => {
-      // 水滴 全体のスロー呼吸
       gsap.to(dropletEl, {
         scaleX: 1.012,
-        scaleY: 1.018, // 縦をほんの少しだけ強め（涙っぽさ）
+        scaleY: 1.018,
         duration: 7.8,
         ease: "sine.inOut",
         repeat: -1,
         yoyo: true,
       });
 
-      // 内側ハイライトのスロー移動（光膜の流れ）
       gsap.to(highlightEl, {
         yPercent: -10,
         duration: 6.4,
@@ -54,7 +59,6 @@ export default function DropletMenuSP() {
 
   // ---------------------------------------
   // ② メニュー開閉アニメーション
-  //    ※ blur は 0.3px までに抑える
   // ---------------------------------------
   useEffect(() => {
     const menuEl = menuRef.current;
@@ -63,6 +67,15 @@ export default function DropletMenuSP() {
     if (!menuEl || !bgEl) return;
 
     if (open) {
+      gsap.set(menuEl, { display: "flex" });
+
+      gsap.to(bgEl, {
+        opacity: 1,
+        duration: 0.35,
+        ease: "power2.out",
+        onStart: () => (bgEl.style.pointerEvents = "auto"),
+      });
+
       gsap.fromTo(
         menuEl,
         { opacity: 0, y: 10, scale: 0.96, filter: "blur(0.25px)" },
@@ -71,54 +84,46 @@ export default function DropletMenuSP() {
           y: 0,
           scale: 1,
           filter: "blur(0px)",
-          duration: 0.48,
+          duration: 0.45,
           ease: "power2.out",
         }
       );
-
-      gsap.to(bgEl, {
-        opacity: 1,
-        duration: 0.4,
-        ease: "power2.out",
-        pointerEvents: "auto",
-      });
     } else {
       gsap.to(menuEl, {
         opacity: 0,
         y: 8,
         scale: 0.96,
         filter: "blur(0.25px)",
-        duration: 0.4,
+        duration: 0.35,
         ease: "power2.out",
+        onComplete: () => {
+          gsap.set(menuEl, { display: "none" });
+        },
       });
 
       gsap.to(bgEl, {
         opacity: 0,
-        duration: 0.4,
+        duration: 0.32,
         ease: "power2.out",
-        pointerEvents: "none",
+        onComplete: () => (bgEl.style.pointerEvents = "none"),
       });
     }
   }, [open]);
 
   // ---------------------------------------
-  // ③ タップ時の「一度だけ涙型リップル」
+  // ③ 水紋リップルアニメ
   // ---------------------------------------
   const triggerRipple = () => {
     const rippleEl = rippleRef.current;
     if (!rippleEl) return;
 
     gsap.killTweensOf(rippleEl);
-    gsap.set(rippleEl, {
-      opacity: 0.35,
-      scaleX: 0.2,
-      scaleY: 0.35, // 縦を強めて涙形
-    });
+    gsap.set(rippleEl, { opacity: 0.35, scaleX: 0.2, scaleY: 0.35 });
 
     gsap.to(rippleEl, {
       opacity: 0,
       scaleX: 1.1,
-      scaleY: 1.35, // 縦がわずかに速い → 涙型の水紋
+      scaleY: 1.35,
       duration: 0.75,
       ease: "power2.out",
     });
@@ -129,12 +134,20 @@ export default function DropletMenuSP() {
     setOpen((v) => !v);
   };
 
+  // ---------------------------------------
+  // ④ Click → Close → Scroll（完全同期）
+  // ---------------------------------------
   const handleMenuItemClick = (targetId) => {
     setOpen(false);
-    scrollToSection(targetId);
+
+    setTimeout(() => {
+      scrollToSection(targetId);
+    }, 380);
   };
 
-  // セクションIDのマッピング（必要に応じて差し替えOK）
+  // ---------------------------------------
+  // メニューアイテム
+  // ---------------------------------------
   const items = [
     { label: "ブランドについて", id: "kisui-philosophy" },
     { label: "成分", id: "kisui-ingredients" },
@@ -152,21 +165,18 @@ export default function DropletMenuSP() {
         ref={dropletRef}
         onClick={handleToggle}
         className="
-          fixed
-          top-4 right-4
+          fixed top-4 right-4
           z-[999999999]
           w-[58px] h-[58px]
           flex flex-col items-center justify-center
           rounded-full
-          bg-white/70
-          backdrop-blur-[12px]
+          bg-white/70 backdrop-blur-[12px]
           ring-1 ring-white/45
           shadow-[0_6px_22px_rgba(0,0,0,0.16)]
           active:scale-[0.97]
           transition-transform duration-150
         "
       >
-        {/* リップル層（涙型の水紋） */}
         <span
           ref={rippleRef}
           className="
@@ -176,12 +186,9 @@ export default function DropletMenuSP() {
             border border-white/70
             bg-gradient-to-b from-white/35 to-[#d9ebf8]/40
           "
-          style={{
-            opacity: 0,
-          }}
+          style={{ opacity: 0 }}
         />
 
-        {/* 内側の“水滴” */}
         <span
           className="
             relative
@@ -193,7 +200,6 @@ export default function DropletMenuSP() {
             overflow-hidden
           "
         >
-          {/* 光膜のハイライト（ゆっくり上下） */}
           <span
             ref={highlightRef}
             className="
@@ -206,44 +212,31 @@ export default function DropletMenuSP() {
           />
         </span>
 
-        {/* MENUラベル */}
-        <span
-          className="
-            text-[8px]
-            tracking-[0.18em]
-            text-black/55
-            mt-[3px]
-            select-none
-          "
-        >
+        <span className="text-[8px] tracking-[0.18em] text-black/55 mt-[3px] select-none">
           MENU
         </span>
       </button>
- 
-        {/* 左上ロゴ */}
-        <button
-          type="button"
-          onClick={() => scrollToSection("kisui-hero")}
-          className="
-            fixed top-4 left-5 z-[99999998]
-            text-[16px]
-            tracking-[0.22em]
-            text-black/55
-          "
-        >
-          KISUI
-        </button>
 
       {/* =============================
-          背景光膜（ぼかしは画面全体）
+          左上ロゴ
+      ============================== */}
+      <button
+        type="button"
+        onClick={() => scrollToSection("kisui-hero")}
+        className="
+          fixed top-4 left-5 z-[99999998]
+          text-[16px] tracking-[0.22em] text-black/55
+        "
+      >
+        KISUI
+      </button>
+
+      {/* =============================
+          背景光膜
       ============================== */}
       <div
         ref={bgRef}
-        className="
-          fixed inset-0
-          z-[9999990]
-          transition-opacity duration-300
-        "
+        className="fixed inset-0 z-[9999990] transition-opacity duration-300"
         style={{
           opacity: 0,
           backdropFilter: "blur(22px)",
@@ -255,13 +248,13 @@ export default function DropletMenuSP() {
       />
 
       {/* =============================
-          メニュー本体
+          メニュー本体（display制御付き）
       ============================== */}
       <nav
         ref={menuRef}
-        className="
-          fixed
-          right-5 top-[80px]
+        className={`
+          ${open ? "flex" : "hidden"}
+          fixed right-5 top-[80px]
           z-[9999999]
           w-[230px]
           p-5
@@ -270,25 +263,21 @@ export default function DropletMenuSP() {
           backdrop-blur-[14px]
           ring-1 ring-white/55
           shadow-[0_18px_35px_rgba(0,0,0,0.10)]
-          flex flex-col gap-3
+          flex-col gap-3
           text-[13px]
           tracking-[0.18em]
-        "
-        style={{ opacity: 0 }}
+        `}
+        style={{ opacity: open ? 1 : 0 }}
       >
         {items.map((item) => (
           <button
             key={item.id}
-            onClick={() => handleMenuItemClick(item.id)}
-            className="
-              text-left
-              py-[6px]
-              text-black/70
-              relative
-              group
-            "
+            onClick={(e) => {
+              e.stopPropagation();
+              handleMenuItemClick(item.id);
+            }}
+            className="text-left py-[6px] text-black/70 relative group"
           >
-            {/* 下ライン（うっすら水膜） */}
             <span
               className="
                 pointer-events-none
