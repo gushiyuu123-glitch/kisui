@@ -95,7 +95,7 @@ export default function PhilosophySP() {
 
 {/* 3段目 */}
 <p className="text-[13.6px] leading-[1.85] tracking-kisui-xs text-black/75 font-light mb-6">
-  毎日の輪郭がやわらぎ、鏡を見るたびに気分が整う。<br />
+  毎日の輪郭がやわらぎ、<br />鏡を見るたびに気分が整う。<br /><br />
   その積み重ねこそが、綺水の目指す未来です。
 </p>
         {/* Drop（薄膜 × 小さめ × 呼吸なし） */}
